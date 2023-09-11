@@ -43,17 +43,21 @@ def add():
     if len(website_text) == 0 or len(email_text) == 0 or len(pass_text) == 0:
         messagebox.showinfo(title="You didn't...", message="You didn't complete all the fields.")
     else:
-
-        with open("data.json", "r") as my_file:
-            # Reading old data
-            data = json.load(my_file)
+        try:
+            with open("data.json", "r") as my_file:
+                # Reading old data
+                data = json.load(my_file)
+        except FileNotFoundError:
+            with open("data.json", "w") as data_file:
+                json.dump(new_data, data_file, indent=4)
+        else:
             # Updating old data with new data
             data.update(new_data)
 
-        with open("data.json", "w") as my_file:
-            # Saving updated data
-            json.dump(data, my_file, indent=4)
-
+            with open("data.json", "w") as my_file:
+                # Saving updated data
+                json.dump(data, my_file, indent=4)
+        finally:
             website_entry.delete(0, END)
             email_entry.delete(0, END)
             pass_entry.delete(0, END)
