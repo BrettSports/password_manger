@@ -64,6 +64,29 @@ def add():
             website_entry.focus()
 
 
+# -------------------------- SEARCH FUNCTION ----------------------------- #
+def find_password():
+    website_search = website_entry.get()
+    email_search = email_entry.get()
+
+    try:
+        with open("data.json", "r") as my_file:
+            data = json.load(my_file)
+        if website_search in data:
+            if data[website_search]["email"] == email_search:
+                email = data[website_search]['email']
+                password = data[website_search]['password']
+                messagebox.showinfo(title="Match Found!", message=f"Website: {website_search} \nEmail: "
+                                                                  f"{email} \nPassword: {password}")
+            else:
+                messagebox.showinfo(title="Match not found!", message="Email not found in data.")
+        else:
+            messagebox.showinfo(title="Match not found!", message="Website not found in data.")
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error!", message="Password manager not found!")
+
+
+
 # ---------------------------- UI SETUP ------------------------------- #
 
 window = Tk()
@@ -85,18 +108,20 @@ pass_label = Label(text="Password:")
 pass_label.grid(column=0, row=3)
 
 # Entry Fields
-website_entry = Entry(width=40)
+website_entry = Entry(width=41)
 website_entry.grid(row=1, column=1, columnspan=2)
 website_entry.focus()
-email_entry = Entry(width=40)
+email_entry = Entry(width=41)
 email_entry.grid(row=2, column=1, columnspan=2)
 pass_entry = Entry(width=22)
 pass_entry.grid(row=3, column=1)
 
 # Buttons
+search_button = Button(text="Search", width=15, command=find_password)
+search_button.grid(column=2, row=1)
 generate_button = Button(text="Generate Password", command=generate_password)
 generate_button.grid(column=2, row=3)
-add_button = Button(text="Add", command=add, width=35)
+add_button = Button(text="Add", command=add, width=30)
 add_button.grid(column=1, row=4, columnspan=2)
 
 
